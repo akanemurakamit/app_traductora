@@ -1,0 +1,116 @@
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch
+
+modelo = "Qwen/Qwen2-0.5B-Instruct"
+
+tokenizer = AutoTokenizer.from_pretrained(modelo)
+model = AutoModelForCausalLM.from_pretrained(
+    modelo,
+    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+    device_map="auto"
+)
+
+# Frases a traducir (inglés → español)
+frases = [
+    "I like soccer",
+    "How are you?",
+    "What time is it?"
+]
+
+def traducir(texto):
+    # 🔥 Forzamos traducción a español
+    prompt = f"Translate the following sentence from English to Spanish. ONLY return the Spanish translation:\n{texto}"
+
+    mensajes = [
+        {"role": "system", "content": "You are a professional translator. You only return translations."},
+        {"role": "user", "content": prompt}
+    ]
+
+    texto_prompt = tokenizer.apply_chat_template(
+        mensajes,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+
+    inputs = tokenizer(texto_prompt, return_tensors="pt").to(model.device)
+
+    with torch.no_grad():
+        salida = model.generate(
+            **inputs,
+            max_new_tokens=50,
+            temperature=0.2,   # más determinístico
+            do_sample=True
+        )
+
+    respuesta = tokenizer.decode(
+        salida[0][inputs["input_ids"].shape[-1]:],
+        skip_special_tokens=True
+    ).strip()
+
+    # 🔧 Limpieza extra por si el modelo agrega texto
+    respuesta = respuesta.split("\n")[0]
+
+    return respuesta
+
+
+# Ejecutar traducciones
+resultados = []
+for frase in frases:
+    traduccion = traducir(frase)
+    resultados.append((frase, traduccion))
+
+
+# Generar HTML
+html = """
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Traductor Inglés → Español (Qwen2-0.5B)</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            padding: 40px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+        .card {
+            background: #eef2ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .original {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Traductor Inglés → Español</h1>
+"""
+
+for original, traduccion in resultados:
+    html += f"""
+        <div class="card">
+            <div class="original">Inglés: {original}</div>
+            <div>Español: {traduccion}</div>
+        </div>
+    """
+
+html += """
+    </div>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html)
+
+print("✅ Traducción completada y HTML generado (index.html)")
