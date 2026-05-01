@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Traductor con Qwen2-0.5B</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 60px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f2937;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #374151;
+        }
+
+        textarea {
+            width: 100%;
+            height: 130px;
+            margin-top: 10px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            font-size: 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .resultado {
+            margin-top: 30px;
+            padding: 20px;
+            background: #eef2ff;
+            border-left: 5px solid #2563eb;
+            border-radius: 10px;
+        }
+
+        .resultado h2 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        .ejemplos {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .ejemplos ul {
+            line-height: 1.8;
+        }
+
+        .nota {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6b7280;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Traductor Inglés → Español</h1>
+        <p class="subtitulo">
+            Aplicación local usando Qwen2-0.5B sin API keys
+        </p>
+
+        <form method="POST">
+            <label for="texto">Escribe una frase en inglés:</label>
+
+            <textarea 
+                id="texto" 
+                name="texto" 
+                placeholder="Ejemplo: I like soccer">{{ texto_original }}</textarea>
+
+            <button type="submit">Traducir</button>
+        </form>
+
+        {% if traduccion %}
+        <div class="resultado">
+            <h2>Traducción:</h2>
+            <p>{{ traduccion }}</p>
+        </div>
+        {% endif %}
+
+        <div class="ejemplos">
+            <strong>Ejemplos que debe soportar:</strong>
+            <ul>
+                <li>I like soccer → Me gusta el fútbol</li>
+                <li>How are you? → ¿Cómo estás?</li>
+                <li>What time is it? → ¿Qué hora es?</li>
+            </ul>
+        </div>
+
+        <p class="nota">
+            Este traductor corre localmente usando Flask, Transformers y Qwen2-0.5B.
+        </p>
+    </div>
+
+</body>
+</html>
