@@ -23,5 +23,6 @@ traductor-qwen/
 └── templates/
     └── index.html
 
-<img width="863" height="558" alt="image" src="https://github.com/user-attachments/assets/53939647-15ac-4534-958c-3adcc5ae4583" />
+## Vista de la aplicación
 
+![Vista de la app traductora](assets/captura_app.png)
