@@ -4,6 +4,10 @@ Este proyecto es una pequeña aplicación web que traduce frases del inglés al 
 
 No utiliza API keys de otros modelos. El modelo se carga localmente usando la librería Transformers de Hugging Face.
 
+## Vista de la aplicación
+
+![Vista de la app traductora](assets/captura_app.png)
+
 ## Ejemplos mínimos
 
 La aplicación debe funcionar con estos ejemplos:
@@ -20,9 +24,7 @@ traductor-qwen/
 ├── app.py
 ├── requirements.txt
 ├── README.md
+├── assets/
+│   └── captura_app.png
 └── templates/
     └── index.html
-
-## Vista de la aplicación
-
-![Vista de la app traductora](assets/captura_app.png)
